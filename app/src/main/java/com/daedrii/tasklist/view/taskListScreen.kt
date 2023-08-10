@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import androidx.navigation.NavController
 import com.daedrii.tasklist.R
 import com.daedrii.tasklist.components.TaskItem
 import com.daedrii.tasklist.model.Task
+import com.daedrii.tasklist.model.TaskDAO
 import com.daedrii.tasklist.ui.theme.Black
 import com.daedrii.tasklist.ui.theme.Pink40
 import com.daedrii.tasklist.ui.theme.White
@@ -47,17 +49,11 @@ fun TaskList(navController: NavController) {
         }
     ) {
         it
-        val taskList: MutableList<Task> = mutableListOf(
-            Task("Jogar lol", "2v2v2v2v2v2v2"),
-            Task("Limpar caixa de areia", "Ta fedendoooo", Task.Priority.LOW),
-            Task("Alimentar os gatos", "miau miau miau miau miau", Task.Priority.MID),
-            Task("Programar", "Commit Push Commit Push Commit Push", Task.Priority.HIGH),
-            Task("Jogar lol", "2v2v2v2v2v2v2"),
-            Task("Limpar caixa de areia", "Ta fedendoooo", Task.Priority.LOW),
-            Task("Alimentar os gatos", "miau miau miau miau miau", Task.Priority.MID),
-            Task("Programar", "Commit Push Commit Push Commit Push", Task.Priority.HIGH)
-        
-        )
+        val context = LocalContext.current // Obter o contexto atual
+
+        val taskDAO = TaskDAO(context)
+
+        val taskList: ArrayList<Task> = taskDAO.getAll()
         
         Column(
             horizontalAlignment = Alignment.CenterHorizontally

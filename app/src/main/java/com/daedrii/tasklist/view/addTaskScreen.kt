@@ -1,6 +1,7 @@
 package com.daedrii.tasklist.view
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.daedrii.tasklist.components.SendButton
 import com.daedrii.tasklist.components.TextBox
+import com.daedrii.tasklist.model.Task
+import com.daedrii.tasklist.model.TaskDAO
 import com.daedrii.tasklist.ui.theme.GreenDisabled
 import com.daedrii.tasklist.ui.theme.GreenSelected
 import com.daedrii.tasklist.ui.theme.RedDisabled
@@ -57,14 +61,22 @@ fun addTask(navController: NavController){
                 fontSize = 32.sp
             )
 
-            taskTitle()
+            val taskTitle = taskTitle()
 
-            taskDescription()
+            val taskDescription = taskDescription()
 
-            taskPriority()
+            val taskPriority = taskPriority()
+
+            val context = LocalContext.current // Obter o contexto atual
+
+            val taskDAO = TaskDAO(context)
+
             
             SendButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    Toast.makeText(context, "${taskPriority}, ${taskTitle}", Toast.LENGTH_SHORT).show()
+                    taskDAO.insert(Task(taskTitle, taskDescription, taskPriority))
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp) ,
@@ -77,7 +89,7 @@ fun addTask(navController: NavController){
 
 }
 @Composable
-fun taskPriority(){
+fun taskPriority(): Task.Priority {
 
     var noPrio by remember{
         mutableStateOf(false)
@@ -95,6 +107,10 @@ fun taskPriority(){
         mutableStateOf(false)
     }
 
+    var actualPriority: Task.Priority by remember{
+        mutableStateOf(Task.Priority.NONE)
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -108,6 +124,16 @@ fun taskPriority(){
             selected = lowPrio,
             onClick = {
                 lowPrio = !lowPrio
+                midPrio = false
+                highPrio = false
+                noPrio = !lowPrio
+
+                actualPriority = if(lowPrio){
+                    Task.Priority.LOW
+                }else{
+                    Task.Priority.NONE
+                }
+
             },
             colors = RadioButtonDefaults.colors(
                 unselectedColor = GreenDisabled,
@@ -119,6 +145,16 @@ fun taskPriority(){
             selected = midPrio,
             onClick = {
                 midPrio = !midPrio
+                lowPrio = false
+                highPrio = false
+                noPrio = false
+
+                actualPriority = if(midPrio){
+                    Task.Priority.MID
+                }else{
+                    Task.Priority.NONE
+                }
+
             },
             colors = RadioButtonDefaults.colors(
                 unselectedColor = YellowDisabled,
@@ -130,6 +166,16 @@ fun taskPriority(){
             selected = highPrio,
             onClick = {
                 highPrio = !highPrio
+                midPrio = false
+                lowPrio = false
+                noPrio = false
+
+                actualPriority = if(highPrio){
+                    Task.Priority.HIGH
+                }else{
+                    Task.Priority.NONE
+                }
+
             },
             colors = RadioButtonDefaults.colors(
                 unselectedColor = RedDisabled,
@@ -139,9 +185,11 @@ fun taskPriority(){
 
     }
 
+    return actualPriority
+
 }
 @Composable
-fun taskTitle(){
+fun taskTitle(): String{
 
     var taskTitle by remember {
         mutableStateOf("")
@@ -159,9 +207,11 @@ fun taskTitle(){
         maxLines = 1,
         keyboardType = KeyboardType.Text
     )
+
+    return taskTitle
 }
 @Composable
-fun taskDescription(){
+fun taskDescription(): String{
 
     var taskDescription by remember{
         mutableStateOf("")
@@ -180,4 +230,6 @@ fun taskDescription(){
         maxLines = 5,
         keyboardType = KeyboardType.Text
     )
+
+    return taskDescription
 }
