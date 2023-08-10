@@ -33,6 +33,8 @@ fun taskList(navController: NavController) {
                 )
             }
         }
-    ) {}
+    ) {
+        it
+    }
 
 }
