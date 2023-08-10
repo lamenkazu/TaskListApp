@@ -30,21 +30,6 @@ import com.daedrii.tasklist.ui.theme.YellowSelected
 @Composable
 fun TaskItem(task: Task) {
 
-    val priorityColor = when(task.taskPriority){
-        Task.Priority.NONE -> {
-            Black
-        }
-        Task.Priority.LOW -> {
-            GreenSelected
-        }
-        Task.Priority.MID -> {
-            YellowSelected
-        }
-        Task.Priority.HIGH -> {
-            RedSelected
-        }
-    }
-
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Purple80
@@ -60,63 +45,111 @@ fun TaskItem(task: Task) {
             val(txtTitle, txtDescription,
                 cardPriority, btnDelete) = createRefs()
 
-            Card(
-                shape = ShapeButton.large,
-                colors = CardDefaults.cardColors(
-                    containerColor = priorityColor
-                ),
-
-                modifier = Modifier
+            PriorityCard(
+                task,
+                Modifier
                     .size(20.dp)
                     .constrainAs(cardPriority) {
                         start.linkTo(parent.start, margin = 10.dp)
                         top.linkTo(parent.top, margin = 15.dp)
-                    }
-            ){
+                    },
+            )
 
-            }
-
-            Text(
-                text = task.taskTitle.toString(),
-                modifier = Modifier
+            TitleText(
+                task,
+                Modifier
                     .constrainAs(txtTitle){
                         start.linkTo(cardPriority.end, margin = 10.dp)
                         top.linkTo(parent.top, margin = 10.dp)
-                    },
-                fontWeight = FontWeight.Bold,
-                fontSize = 21.sp
+                    }
             )
 
-            Text(
-                text = task.taskDescription.toString(),
-                modifier = Modifier
+            DescriptionText(
+                task,
+                Modifier
                     .width(280.dp)
-                    .constrainAs(txtDescription){
+                    .constrainAs(txtDescription) {
                         start.linkTo(parent.start, margin = 10.dp)
                         top.linkTo(txtTitle.bottom, margin = 10.dp)
-                    },
-                fontSize = 18.sp
+                    }
             )
 
-            IconButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.constrainAs(btnDelete){
+            DeleteButton(
+                Modifier.constrainAs(btnDelete){
                     start.linkTo(parent.end)
                     bottom.linkTo(parent.top, margin = (-40).dp)
                 }
-            ) {
-
-                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete_forever), contentDescription = null, tint = RedSelected)
-
-            }
+            )
 
         }
     }
+}
 
+@Composable
+private fun DeleteButton(
+    modifier: Modifier
+){
+    IconButton(
+        onClick = { /*TODO*/ },
+        modifier = modifier
+    ) {
+
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete_forever),
+            contentDescription = null,
+            tint = RedSelected)
+
+    }
+}
+
+@Composable
+private fun DescriptionText(
+    task: Task,
+    modifier: Modifier
+){
+    Text(
+        text = task.taskDescription.toString(),
+        fontSize = 18.sp,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun TitleText(
+    task: Task,
+    modifier: Modifier
+){
+    Text(
+        text = task.taskTitle.toString(),
+        modifier = modifier,
+        fontWeight = FontWeight.Bold,
+        fontSize = 21.sp
+    )
+}
+
+@Composable
+private fun PriorityCard(
+    task: Task,
+    modifier: Modifier
+){
+    val priorityColor = when(task.taskPriority){
+        Task.Priority.NONE -> { Black }
+        Task.Priority.LOW -> { GreenSelected }
+        Task.Priority.MID -> { YellowSelected }
+        Task.Priority.HIGH -> { RedSelected }
+    }
+
+    Card(
+        shape = ShapeButton.large,
+        colors = CardDefaults.cardColors(
+            containerColor = priorityColor
+        ),
+        modifier = modifier
+    ){}
 }
 
 @Preview
 @Composable
 private fun TaskItemPreview(){
-    TaskItem(Task("Tarefa Teste", "blaablablabla", Task.Priority.LOW))
+    TaskItem(Task("Tarefa Teste", "blaablablabla"))
 }
