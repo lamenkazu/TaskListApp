@@ -61,6 +61,7 @@ fun TaskItem(task: Task, navController: NavController) {
             TitleText(
                 task,
                 Modifier
+                    .width(250.dp)
                     .constrainAs(txtTitle){
                         start.linkTo(cardPriority.end, margin = 10.dp)
                         top.linkTo(parent.top, margin = 10.dp)

@@ -77,11 +77,27 @@ fun AddTask(navController: NavController){
                     fontSize = 32.sp
                 )
 
-                val taskTitle = taskTitle()
+                var taskTitle by remember {
+                    mutableStateOf("")
+                }
+                var taskDescription by remember{
+                    mutableStateOf("")
+                }
+                var taskPriority by remember{
+                    mutableStateOf(Task.Priority.NONE)
+                }
 
-                val taskDescription = taskDescription()
+                TaskTitle(taskTitle){
+                    taskTitle = it
+                }
+                TaskDescription(taskDescription) {
+                    taskDescription = it
+                }
 
-                val taskPriority = taskPriority()
+                TaskPriority(taskPriority){
+                    taskPriority = it
+                }
+
 
                 val context = LocalContext.current // Obter o contexto atual
                 val taskDAO = TaskDAO(context)
@@ -92,6 +108,14 @@ fun AddTask(navController: NavController){
 
                         }else{
                             taskDAO.insert(Task(taskDAO.getAll().size, taskTitle, taskDescription, taskPriority))
+
+                            navController.navigate("addTask"){
+                                popUpTo("addTask"){
+                                    inclusive = true
+                                }
+                            }
+                            Toast.makeText(context, "Sua tarefa foi salva com sucesso", Toast.LENGTH_SHORT).show()
+
                         }
                     },
                     modifier = Modifier
@@ -106,8 +130,44 @@ fun AddTask(navController: NavController){
     }
 
 }
+
 @Composable
-fun taskPriority(): Task.Priority {
+fun TaskTitle(taskTitle: String, onTaskTitleChange: (String) -> Unit){
+
+    TextBox(
+        value = taskTitle,
+        onValueChange = {
+            onTaskTitleChange(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp, 20.dp, 20.dp, 0.dp),
+        label = "Titulo da Tarefa",
+        maxLines = 1,
+        keyboardType = KeyboardType.Text
+    )
+}
+@Composable
+fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (String) -> Unit){
+
+    TextBox(
+        value = taskDescription,
+        onValueChange = {
+            onTaskDescriptionChange(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            .padding(20.dp, 10.dp, 20.dp, 0.dp),
+        label = "Descrição da Tarefa",
+        maxLines = 5,
+        keyboardType = KeyboardType.Text
+    )
+
+}
+
+@Composable
+fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority) -> Unit): Task.Priority {
 
     var noPrio by remember{
         mutableStateOf(false)
@@ -123,10 +183,6 @@ fun taskPriority(): Task.Priority {
 
     var highPrio by remember{
         mutableStateOf(false)
-    }
-
-    var actualPriority: Task.Priority by remember{
-        mutableStateOf(Task.Priority.NONE)
     }
 
     Row(
@@ -146,10 +202,11 @@ fun taskPriority(): Task.Priority {
                 highPrio = false
                 noPrio = !lowPrio
 
-                actualPriority = if(lowPrio){
-                    Task.Priority.LOW
+                if(lowPrio){
+                    onTaskPrioChange(Task.Priority.LOW)
                 }else{
-                    Task.Priority.NONE
+                    onTaskPrioChange(Task.Priority.NONE)
+
                 }
 
             },
@@ -167,10 +224,10 @@ fun taskPriority(): Task.Priority {
                 highPrio = false
                 noPrio = false
 
-                actualPriority = if(midPrio){
-                    Task.Priority.MID
+                if(midPrio){
+                    onTaskPrioChange(Task.Priority.MID)
                 }else{
-                    Task.Priority.NONE
+                    onTaskPrioChange(Task.Priority.NONE)
                 }
 
             },
@@ -188,10 +245,10 @@ fun taskPriority(): Task.Priority {
                 lowPrio = false
                 noPrio = false
 
-                actualPriority = if(highPrio){
-                    Task.Priority.HIGH
+                if(highPrio){
+                    onTaskPrioChange(Task.Priority.HIGH)
                 }else{
-                    Task.Priority.NONE
+                    onTaskPrioChange(Task.Priority.NONE)
                 }
 
             },
@@ -205,49 +262,4 @@ fun taskPriority(): Task.Priority {
 
     return actualPriority
 
-}
-@Composable
-fun taskTitle(): String{
-
-    var taskTitle by remember {
-        mutableStateOf("")
-    }
-
-    TextBox(
-        value = taskTitle,
-        onValueChange = {
-            taskTitle = it
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp, 20.dp, 20.dp, 0.dp),
-        label = "Titulo da Tarefa",
-        maxLines = 1,
-        keyboardType = KeyboardType.Text
-    )
-
-    return taskTitle
-}
-@Composable
-fun taskDescription(): String{
-
-    var taskDescription by remember{
-        mutableStateOf("")
-    }
-
-    TextBox(
-        value = taskDescription,
-        onValueChange = {
-            taskDescription = it
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .padding(20.dp, 10.dp, 20.dp, 0.dp),
-        label = "Descrição da Tarefa",
-        maxLines = 5,
-        keyboardType = KeyboardType.Text
-    )
-
-    return taskDescription
 }
