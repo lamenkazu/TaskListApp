@@ -102,7 +102,11 @@ private fun DeleteButton(
     IconButton(
         onClick = {
             taskDAO.delete(task)
-            navController.navigate("taskList")
+            navController.navigate("taskList") {
+                popUpTo("taskList") {// Remove a tela atual da pilha de navegação
+                    inclusive = true
+                }
+            }
         },
         modifier = modifier
     ) {

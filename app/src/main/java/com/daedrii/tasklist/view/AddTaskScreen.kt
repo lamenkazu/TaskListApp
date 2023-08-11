@@ -55,7 +55,7 @@ fun AddTask(navController: NavController){
         Column() {
 
             IconButton(onClick = {
-                navController.navigate("taskList")
+                navController.navigateUp()
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
