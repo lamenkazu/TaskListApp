@@ -51,6 +51,16 @@ import com.daedrii.tasklist.ui.theme.YellowSelected
 @Composable
 fun AddTask(navController: NavController){
 
+    var taskTitle by remember {
+        mutableStateOf("")
+    }
+    var taskDescription by remember{
+        mutableStateOf("")
+    }
+    var taskPriority by remember{
+        mutableStateOf(Task.Priority.NONE)
+    }
+
     Scaffold {
         Column {
 
@@ -70,22 +80,11 @@ fun AddTask(navController: NavController){
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-
                 Text(
                     text = "Inserir Nova Tarefa",
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp
                 )
-
-                var taskTitle by remember {
-                    mutableStateOf("")
-                }
-                var taskDescription by remember{
-                    mutableStateOf("")
-                }
-                var taskPriority by remember{
-                    mutableStateOf(Task.Priority.NONE)
-                }
 
                 TaskTitle(taskTitle){
                     taskTitle = it
@@ -98,32 +97,7 @@ fun AddTask(navController: NavController){
                     taskPriority = it
                 }
 
-
-                val context = LocalContext.current // Obter o contexto atual
-                val taskDAO = TaskDAO(context)
-                SendButton(
-                    onClick = {
-                        if(taskTitle.isBlank()){
-                            Toast.makeText(context, "Sua tarefa deve ter um titulo", Toast.LENGTH_SHORT).show()
-
-                        }else{
-                            taskDAO.insert(Task(taskDAO.getAll().size, taskTitle, taskDescription, taskPriority))
-
-                            navController.navigate("addTask"){
-                                popUpTo("addTask"){
-                                    inclusive = true
-                                }
-                            }
-                            Toast.makeText(context, "Sua tarefa foi salva com sucesso", Toast.LENGTH_SHORT).show()
-
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp) ,
-                    text = "Salvar",
-                    shape = ShapeSendButton.small
-                )
+                SendTask(taskTitle, taskDescription, taskPriority, navController)
 
             }
         }
@@ -172,15 +146,12 @@ fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority
     var noPrio by remember{
         mutableStateOf(false)
     }
-
     var lowPrio by remember{
         mutableStateOf(false)
     }
-
     var midPrio by remember{
         mutableStateOf(false)
     }
-
     var highPrio by remember{
         mutableStateOf(false)
     }
@@ -262,4 +233,38 @@ fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority
 
     return actualPriority
 
+}
+
+@Composable
+fun SendTask(
+    taskTitle: String,
+    taskDescription: String,
+    taskPriority: Task.Priority,
+    navController: NavController
+) {
+    val context = LocalContext.current // Obter o contexto atual
+    val taskDAO = TaskDAO(context)
+    SendButton(
+        onClick = {
+            if(taskTitle.isBlank()){
+                Toast.makeText(context, "Sua tarefa deve ter um titulo", Toast.LENGTH_SHORT).show()
+
+            }else{
+                taskDAO.insert(Task(taskDAO.getAll().size, taskTitle, taskDescription, taskPriority))
+
+                navController.navigate("addTask"){
+                    popUpTo("addTask"){
+                        inclusive = true
+                    }
+                }
+                Toast.makeText(context, "Sua tarefa foi salva com sucesso", Toast.LENGTH_SHORT).show()
+
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp) ,
+        text = "Salvar",
+        shape = ShapeSendButton.small
+    )
 }
