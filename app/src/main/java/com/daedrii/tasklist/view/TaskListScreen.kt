@@ -17,11 +17,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.daedrii.tasklist.R
 import com.daedrii.tasklist.components.TaskItem
+import com.daedrii.tasklist.model.Task
 import com.daedrii.tasklist.model.TaskDAO
 import com.daedrii.tasklist.ui.theme.Black
 import com.daedrii.tasklist.ui.theme.Pink40
@@ -47,9 +50,11 @@ fun TaskList(navController: NavController) {
             }
         }
     ) {
-        it.toString()
+        it
         val taskDAO = TaskDAO(LocalContext.current)
-        val taskList = taskDAO.getAll()
+        val taskList = mutableListOf<Task>()
+        //taskList.add(Task(0, "Title Test", "Task Description"))
+        taskList.addAll(taskDAO.getAll())
         
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -77,4 +82,10 @@ fun TaskList(navController: NavController) {
         }
     }
 
+}
+@Composable
+@Preview
+private fun TaskListScreenPreview(){
+    val navController = rememberNavController()
+    TaskList(navController)
 }

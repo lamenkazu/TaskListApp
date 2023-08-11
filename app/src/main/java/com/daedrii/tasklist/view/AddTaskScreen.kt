@@ -30,9 +30,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.daedrii.tasklist.R
 import com.daedrii.tasklist.components.SendButton
 import com.daedrii.tasklist.components.TextBox
@@ -106,7 +108,7 @@ fun AddTask(navController: NavController){
 }
 
 @Composable
-fun TaskTitle(taskTitle: String, onTaskTitleChange: (String) -> Unit){
+private fun TaskTitle(taskTitle: String, onTaskTitleChange: (String) -> Unit){
 
     TextBox(
         value = taskTitle,
@@ -122,7 +124,7 @@ fun TaskTitle(taskTitle: String, onTaskTitleChange: (String) -> Unit){
     )
 }
 @Composable
-fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (String) -> Unit){
+private fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (String) -> Unit){
 
     TextBox(
         value = taskDescription,
@@ -141,7 +143,7 @@ fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (String) -
 }
 
 @Composable
-fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority) -> Unit): Task.Priority {
+private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority) -> Unit): Task.Priority {
 
     var noPrio by remember{
         mutableStateOf(false)
@@ -236,12 +238,7 @@ fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority
 }
 
 @Composable
-fun SendTask(
-    taskTitle: String,
-    taskDescription: String,
-    taskPriority: Task.Priority,
-    navController: NavController
-) {
+private fun SendTask(taskTitle: String, taskDescription: String, taskPriority: Task.Priority, navController: NavController) {
     val context = LocalContext.current // Obter o contexto atual
     val taskDAO = TaskDAO(context)
     SendButton(
@@ -267,4 +264,11 @@ fun SendTask(
         text = "Salvar",
         shape = ShapeSendButton.small
     )
+}
+
+@Composable
+@Preview
+private fun AddTaskScreenPreview(){
+    val navController = rememberNavController()
+    AddTask(navController)
 }
