@@ -51,8 +51,8 @@ import com.daedrii.tasklist.ui.theme.YellowSelected
 @Composable
 fun AddTask(navController: NavController){
 
-    Scaffold() {
-        Column() {
+    Scaffold {
+        Column {
 
             IconButton(onClick = {
                 navController.navigateUp()
