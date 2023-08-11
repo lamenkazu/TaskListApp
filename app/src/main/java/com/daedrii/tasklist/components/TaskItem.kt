@@ -12,14 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.daedrii.tasklist.R
 import com.daedrii.tasklist.model.Task
+import com.daedrii.tasklist.model.TaskDAO
 import com.daedrii.tasklist.ui.theme.Black
 import com.daedrii.tasklist.ui.theme.GreenSelected
 import com.daedrii.tasklist.ui.theme.Purple80
@@ -28,7 +30,8 @@ import com.daedrii.tasklist.ui.theme.ShapeButton
 import com.daedrii.tasklist.ui.theme.YellowSelected
 
 @Composable
-fun TaskItem(task: Task) {
+fun TaskItem(task: Task, navController: NavController) {
+
 
     Card(
         colors = CardDefaults.cardColors(
@@ -74,11 +77,15 @@ fun TaskItem(task: Task) {
                     }
             )
 
+
+
             DeleteButton(
+                task, navController,
                 Modifier.constrainAs(btnDelete){
                     start.linkTo(parent.end)
                     bottom.linkTo(parent.top, margin = (-40).dp)
-                }
+                },
+
             )
 
         }
@@ -87,10 +94,16 @@ fun TaskItem(task: Task) {
 
 @Composable
 private fun DeleteButton(
+    task: Task,
+    navController: NavController,
     modifier: Modifier
 ){
+    val taskDAO = TaskDAO(LocalContext.current)
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = {
+            taskDAO.delete(task)
+            navController.navigate("taskList")
+        },
         modifier = modifier
     ) {
 
@@ -120,7 +133,7 @@ private fun TitleText(
     modifier: Modifier
 ){
     Text(
-        text = task.taskTitle.toString(),
+        text = task.taskTitle,
         modifier = modifier,
         fontWeight = FontWeight.Bold,
         fontSize = 21.sp
@@ -146,10 +159,4 @@ private fun PriorityCard(
         ),
         modifier = modifier
     ){}
-}
-
-@Preview
-@Composable
-private fun TaskItemPreview(){
-    TaskItem(Task("Tarefa Teste", "blaablablabla"))
 }

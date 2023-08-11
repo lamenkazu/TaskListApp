@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.daedrii.tasklist.ui.theme.TaskListTheme
-import com.daedrii.tasklist.view.addTask
+import com.daedrii.tasklist.view.AddTask
 import com.daedrii.tasklist.view.TaskList
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = "addTask"){
-                        addTask(navController)
+                        AddTask(navController)
                     }
                 }
 

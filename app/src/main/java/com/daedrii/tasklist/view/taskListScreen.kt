@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.daedrii.tasklist.R
 import com.daedrii.tasklist.components.TaskItem
-import com.daedrii.tasklist.model.Task
 import com.daedrii.tasklist.model.TaskDAO
 import com.daedrii.tasklist.ui.theme.Black
 import com.daedrii.tasklist.ui.theme.Pink40
@@ -48,12 +47,9 @@ fun TaskList(navController: NavController) {
             }
         }
     ) {
-        it
-        val context = LocalContext.current // Obter o contexto atual
-
-        val taskDAO = TaskDAO(context)
-
-        val taskList: ArrayList<Task> = taskDAO.getAll()
+        it.toString()
+        val taskDAO = TaskDAO(LocalContext.current)
+        val taskList = taskDAO.getAll()
         
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -75,8 +71,7 @@ fun TaskList(navController: NavController) {
 
             LazyColumn{
                 itemsIndexed(taskList){position, _ ->
-
-                    TaskItem(taskList[position])
+                    TaskItem(taskList[position], navController)
                 }
             }
         }

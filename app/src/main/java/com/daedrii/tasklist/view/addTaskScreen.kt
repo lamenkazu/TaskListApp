@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -23,12 +25,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.daedrii.tasklist.R
 import com.daedrii.tasklist.components.SendButton
 import com.daedrii.tasklist.components.TextBox
 import com.daedrii.tasklist.model.Task
@@ -44,46 +49,59 @@ import com.daedrii.tasklist.ui.theme.YellowSelected
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun addTask(navController: NavController){
+fun AddTask(navController: NavController){
 
     Scaffold() {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
+        Column() {
 
-            Text(
-                text = "Inserir Nova Tarefa",
-                fontWeight = FontWeight.Bold,
-                fontSize = 32.sp
-            )
+            IconButton(onClick = {
+                navController.navigate("taskList")
+            }) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
+                    contentDescription = null
+                )
+            }
 
-            val taskTitle = taskTitle()
-
-            val taskDescription = taskDescription()
-
-            val taskPriority = taskPriority()
-
-            val context = LocalContext.current // Obter o contexto atual
-
-            val taskDAO = TaskDAO(context)
-
-            
-            SendButton(
-                onClick = {
-                    Toast.makeText(context, "${taskPriority}, ${taskTitle}", Toast.LENGTH_SHORT).show()
-                    taskDAO.insert(Task(taskTitle, taskDescription, taskPriority))
-                },
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp) ,
-                text = "Salvar",
-                shape = ShapeSendButton.small
-            )
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
 
+                Text(
+                    text = "Inserir Nova Tarefa",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp
+                )
+
+                val taskTitle = taskTitle()
+
+                val taskDescription = taskDescription()
+
+                val taskPriority = taskPriority()
+
+                val context = LocalContext.current // Obter o contexto atual
+                val taskDAO = TaskDAO(context)
+                SendButton(
+                    onClick = {
+                        if(taskTitle.isBlank()){
+                            Toast.makeText(context, "Sua tarefa deve ter um titulo", Toast.LENGTH_SHORT).show()
+
+                        }else{
+                            taskDAO.insert(Task(taskDAO.getAll().size, taskTitle, taskDescription, taskPriority))
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp) ,
+                    text = "Salvar",
+                    shape = ShapeSendButton.small
+                )
+
+            }
         }
     }
 

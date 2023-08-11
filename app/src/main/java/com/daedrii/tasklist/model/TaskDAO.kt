@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
@@ -38,6 +39,7 @@ class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VER
         val db = writableDatabase
         val values = ContentValues()
 
+        values.put(KEY_ID, task.taskId)
         values.put(KEY_TITLE, task.taskTitle)
         values.put(KEY_DESCRIPTION, task.taskDescription)
         values.put(KEY_PRIORITY, task.taskPriority.ordinal)
@@ -47,8 +49,10 @@ class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VER
 
     fun delete(task: Task){
         val db = writableDatabase
-        val whereClause = "$KEY_TITLE = ? AND $KEY_DESCRIPTION = ? AND $KEY_PRIORITY = ?"
-        val whereArgs = arrayOf(task.taskTitle, task.taskDescription, task.taskPriority.toString())
+        val whereClause = "$KEY_ID = ? AND $KEY_TITLE = ? AND $KEY_DESCRIPTION = ? AND $KEY_PRIORITY = ?"
+        val whereArgs = arrayOf(task.taskId.toString(), task.taskTitle, task.taskDescription, task.taskPriority.ordinal.toString())
+
+        Log.d("Delete Task","${task.taskTitle} ${task.taskDescription} ${task.taskPriority.toString()} ")
 
         db.delete(TABLE_TASKS, whereClause, whereArgs)
     }
@@ -66,11 +70,12 @@ class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VER
         cursor?.apply {
             if(moveToFirst()){
                 do{
+                    val id = getInt((getColumnIndex(KEY_ID)))
                     val title = getString(getColumnIndex(KEY_TITLE))
                     val description = getString(getColumnIndex(KEY_DESCRIPTION))
                     val priorityOrdinal = getInt(getColumnIndex(KEY_PRIORITY))
                     val priority = Task.Priority.values()[priorityOrdinal]
-                    productList.add(Task(title, description, priority))
+                    productList.add(Task(id, title, description, priority))
 
                 }while(moveToNext())
             }
