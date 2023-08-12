@@ -35,7 +35,7 @@ class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VER
         onCreate(db)
     }
 
-    fun insert(task: Task){
+    fun insert(task: Task): Boolean{
         val db = writableDatabase
         val values = ContentValues()
 
@@ -44,17 +44,17 @@ class TaskDAO(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VER
         values.put(KEY_DESCRIPTION, task.taskDescription)
         values.put(KEY_PRIORITY, task.taskPriority.ordinal)
 
-        db.insert(TABLE_TASKS, null, values)
+        return db.insert(TABLE_TASKS, null, values) != -1L
     }
 
-    fun delete(task: Task){
+    fun delete(task: Task): Boolean{
         val db = writableDatabase
         val whereClause = "$KEY_ID = ? AND $KEY_TITLE = ? AND $KEY_DESCRIPTION = ? AND $KEY_PRIORITY = ?"
         val whereArgs = arrayOf(task.taskId.toString(), task.taskTitle, task.taskDescription, task.taskPriority.ordinal.toString())
 
         Log.d("Delete Task","${task.taskTitle} ${task.taskDescription} ${task.taskPriority.toString()} ")
 
-        db.delete(TABLE_TASKS, whereClause, whereArgs)
+        return db.delete(TABLE_TASKS, whereClause, whereArgs) != 0
     }
 
 
