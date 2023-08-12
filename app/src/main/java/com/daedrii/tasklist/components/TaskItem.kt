@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -114,7 +115,7 @@ private fun DeleteButton(
 
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete_forever),
-            contentDescription = null,
+            contentDescription = "Delete Button",
             tint = RedSelected)
 
     }
@@ -146,9 +147,9 @@ private fun TitleText(
 }
 
 @Composable
-private fun PriorityCard(
+fun PriorityCard(
     task: Task,
-    modifier: Modifier
+    modifier: Modifier,
 ){
     val priorityColor = when(task.taskPriority){
         Task.Priority.NONE -> { Black }
@@ -162,6 +163,6 @@ private fun PriorityCard(
         colors = CardDefaults.cardColors(
             containerColor = priorityColor
         ),
-        modifier = modifier
+        modifier = modifier.testTag("PriorityCard")
     ){}
 }
