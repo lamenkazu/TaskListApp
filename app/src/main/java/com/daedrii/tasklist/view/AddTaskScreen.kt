@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -71,7 +72,7 @@ fun AddTask(navController: NavController){
             }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
-                    contentDescription = null
+                    contentDescription = "Back Button"
                 )
             }
 
@@ -85,7 +86,8 @@ fun AddTask(navController: NavController){
                 Text(
                     text = "Inserir Nova Tarefa",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 32.sp
+                    fontSize = 32.sp,
+                    modifier = Modifier.testTag("PageTitleNewTask")
                 )
 
                 TaskTitle(taskTitle){
@@ -95,7 +97,7 @@ fun AddTask(navController: NavController){
                     taskDescription = it
                 }
 
-                TaskPriority(taskPriority){
+                TaskPriority {
                     taskPriority = it
                 }
 
@@ -117,7 +119,8 @@ private fun TaskTitle(taskTitle: String, onTaskTitleChange: (String) -> Unit){
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp, 20.dp, 20.dp, 0.dp),
+            .padding(20.dp, 20.dp, 20.dp, 0.dp)
+            .testTag("taskTitle"),
         label = "Titulo da Tarefa",
         maxLines = 1,
         keyboardType = KeyboardType.Text
@@ -134,7 +137,8 @@ private fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (S
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .padding(20.dp, 10.dp, 20.dp, 0.dp),
+            .padding(20.dp, 10.dp, 20.dp, 0.dp)
+            .testTag("taskDescription"),
         label = "Descrição da Tarefa",
         maxLines = 5,
         keyboardType = KeyboardType.Text
@@ -143,7 +147,7 @@ private fun TaskDescription(taskDescription: String, onTaskDescriptionChange: (S
 }
 
 @Composable
-private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.Priority) -> Unit): Task.Priority {
+private fun TaskPriority(onTaskPrioChange: (Task.Priority) -> Unit) {
 
     var noPrio by remember{
         mutableStateOf(false)
@@ -165,7 +169,10 @@ private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        Text(text = "Nível de Prioridade")
+        Text(
+            text = "Nível de Prioridade",
+            modifier = Modifier.testTag("labelPriority")
+        )
 
         RadioButton(
             selected = lowPrio,
@@ -179,14 +186,13 @@ private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.
                     onTaskPrioChange(Task.Priority.LOW)
                 }else{
                     onTaskPrioChange(Task.Priority.NONE)
-
                 }
-
             },
             colors = RadioButtonDefaults.colors(
                 unselectedColor = GreenDisabled,
                 selectedColor = GreenSelected
-            )
+            ),
+            modifier = Modifier.testTag("radioLowPrio")
         )
 
         RadioButton(
@@ -207,7 +213,8 @@ private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.
             colors = RadioButtonDefaults.colors(
                 unselectedColor = YellowDisabled,
                 selectedColor = YellowSelected
-            )
+            ),
+            modifier = Modifier.testTag("radioMidPrio")
         )
 
         RadioButton(
@@ -228,12 +235,11 @@ private fun TaskPriority(actualPriority: Task.Priority, onTaskPrioChange: (Task.
             colors = RadioButtonDefaults.colors(
                 unselectedColor = RedDisabled,
                 selectedColor = RedSelected
-            )
+            ),
+            modifier = Modifier.testTag("radioHighPrio")
         )
 
     }
-
-    return actualPriority
 
 }
 
@@ -260,7 +266,8 @@ private fun SendTask(taskTitle: String, taskDescription: String, taskPriority: T
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp) ,
+            .padding(20.dp)
+            .testTag("Button Send"),
         text = "Salvar",
         shape = ShapeSendButton.small
     )

@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +42,8 @@ fun TaskList(navController: NavController) {
                 onClick = {
                           navController.navigate("addTask")
                 },
-                containerColor = Pink40
+                containerColor = Pink40,
+                modifier = Modifier.testTag("addTaskButton")
             ) {
                 Icon(imageVector = ImageVector.vectorResource(
                     id = R.drawable.ic_add),
@@ -50,7 +52,7 @@ fun TaskList(navController: NavController) {
             }
         }
     ) {
-        it
+        it.toString()
         val taskDAO = TaskDAO(LocalContext.current)
         val taskList = mutableListOf<Task>()
         //taskList.add(Task(0, "Title Test", "Task Description"))
@@ -70,6 +72,7 @@ fun TaskList(navController: NavController) {
                     color = White,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
+                    modifier = Modifier.testTag("TaskListPageTitle")
 
                 )
             }
