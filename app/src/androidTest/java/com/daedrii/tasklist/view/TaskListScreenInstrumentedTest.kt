@@ -15,7 +15,7 @@ class TaskListScreenInstrumentedTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun ShouldRenderTaskListScreenProperly(){
+    fun shouldRenderTaskListScreenProperly(){
         composeTestRule.setContent {
             TaskList(navController = rememberNavController())
         }

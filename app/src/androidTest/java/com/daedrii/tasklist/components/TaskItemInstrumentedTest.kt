@@ -18,7 +18,7 @@ class TaskItemInstrumentedTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun ShouldRenderTaskItemProperly(){
+    fun shouldRenderTaskItemProperly(){
 
         val task = Task(0, "Test", "Teste")
 

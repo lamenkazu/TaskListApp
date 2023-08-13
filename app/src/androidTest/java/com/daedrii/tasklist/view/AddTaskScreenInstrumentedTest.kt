@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,22 +21,23 @@ class AddTaskScreenInstrumentedTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun ShouldNotAllowToSendTaskToDatabaseWhenTitleIsEmpty(){
+    fun shouldNotAllowToSendTaskToDatabaseWhenTitleIsEmpty(){
         composeTestRule.setContent {
             AddTask(navController = rememberNavController())
         }
         composeTestRule.onNodeWithTag("Button Send").performClick()
 
         GlobalScope.launch {
-            delay(1000) // Pausa a execução por 1 segundo sem bloquear a thread
+            delay(500) // Pausa a execução por 1 segundo sem bloquear a thread
             composeTestRule.onNodeWithText("Sua tarefa deve ter um titulo").assertExists()
         }
 
     }
 
     @Test
-    fun ShouldRenderAddTaskScreenProperly(){
+    fun shouldRenderAddTaskScreenProperly(){
         composeTestRule.setContent {
             AddTask(navController = rememberNavController())
         }

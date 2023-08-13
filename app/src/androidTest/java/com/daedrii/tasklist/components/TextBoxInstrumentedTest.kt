@@ -19,7 +19,7 @@ class TextBoxInstrumentedTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun ShouldRenderTextBoxCorrectly(){
+    fun shouldRenderTextBoxCorrectly(){
         val value = "Texto de Teste"
 
         composeTestRule.setContent{
@@ -36,7 +36,7 @@ class TextBoxInstrumentedTest {
     }
 
     @Test
-    fun ShouldInputTextInBoxCorrectly(){
+    fun shouldInputTextInBoxCorrectly(){
         val value = ""
         var capturedValue = ""
         val onValueChange: (String) -> Unit = {

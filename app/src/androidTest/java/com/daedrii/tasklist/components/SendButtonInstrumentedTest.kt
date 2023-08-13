@@ -19,7 +19,7 @@ class SendButtonInstrumentedTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun ShouldDisplaySendButtonTextProperly(){
+    fun shouldDisplaySendButtonTextProperly(){
 
         val buttonText = "Enviar"
 
@@ -39,7 +39,7 @@ class SendButtonInstrumentedTest {
     }
 
     @Test
-    fun ShouldPerformClickOfButtonProperly(){
+    fun shouldPerformClickOfButtonProperly(){
         var clicked = false
 
         composeTestRule.setContent {
