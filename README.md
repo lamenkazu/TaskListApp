@@ -20,9 +20,9 @@ não funciona da mesma forma que no Swift, mas causa o mesmo efeito de desejar u
 O Jetpack Compose aproxima muito mais o desenvolvedor da sensação de produzir PARA o mobile.
 
 ## Task List
-Esse projeto abordou mais o foco no desenvolvimento Front-End da aplicação,
+Esse projeto abordou mais o foco no desenvolvimento Front-End da aplicação e seus testes,
 porém também foi implementado um Banco de Dados Local em SQLite para a aplicação,
-a qual consome muito pouco dos dados do dispositivo.
+a qual necessita de muito pouco espaço do dispositivo para armazenamento.
 
 ### Projeto
 A Main Activity se tornou um tipo de Router para as telas do aplicativo.
@@ -38,3 +38,12 @@ foram criados para serem reutilizados, mas cada um aborda diferentes utilizaçõ
 #### Os modelos de dados
 foram colocados na model, onde a Classe **Task** tem o modelo de uma Tarefa e 
 **TaskDAO** possui o código SQL que lida com as operações no banco de dados.
+
+## Melhorias por vir
+- Ordenação da lista de afazeres por prioridade,
+- Qualidade da interface do usuário
+- Mais funcionalidades básicas para utilização mais moderna,
+- Sistema de notificações,
+- inserção de datas e/ou tempo limite para realização de tarefas (não obrigatorio),
+- lista de tarefas realizadas em separado da lista de a realizar (nova tela) adjunto de botão de completar tarefa
+- animações
